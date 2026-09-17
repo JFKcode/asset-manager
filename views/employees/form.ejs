@@ -1,0 +1,17 @@
+<%- include('../partials/header', { title: employee.id ? 'Edytuj pracownika' : 'Nowy pracownik' }) %>
+<div class="page-header"><h1><%= employee.id ? 'Edytuj pracownika' : 'Nowy pracownik' %></h1></div>
+
+<div class="card">
+  <form method="POST" action="<%= action %>" class="form-grid">
+    <div class="field"><label>Osoba (imię i nazwisko)</label><input type="text" name="person" value="<%= employee.person || '' %>" required></div>
+    <div class="field"><label>Dział</label><input type="text" name="department" value="<%= employee.department || '' %>"></div>
+    <div class="field"><label>Linia</label><input type="text" name="line" value="<%= employee.line || '' %>"></div>
+    <div class="field"><label>E-mail (do wysyłki protokołów)</label><input type="email" name="email" value="<%= employee.email || '' %>"></div>
+    <div class="field full"><label>Info</label><textarea name="info" rows="3"><%= employee.info || '' %></textarea></div>
+    <div class="field full form-actions">
+      <button class="btn" type="submit">Zapisz</button>
+      <a href="/pracownicy" class="btn btn-secondary">Anuluj</a>
+    </div>
+  </form>
+</div>
+<%- include('../partials/footer') %>

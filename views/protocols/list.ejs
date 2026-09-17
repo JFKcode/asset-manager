@@ -1,0 +1,34 @@
+<%- include('../partials/header', { title: 'Protokoły' }) %>
+<div class="page-header">
+  <h1>Protokoły</h1>
+  <div style="display:flex; gap:8px;">
+    <a href="/protokoly/wydanie/nowy" class="btn">+ Wydanie</a>
+    <a href="/protokoly/zdanie/nowy" class="btn btn-secondary">+ Zdanie</a>
+  </div>
+</div>
+
+<div class="table-wrap">
+  <table>
+    <thead><tr><th>Data</th><th>Typ</th><th>Pracownik</th><th>Urządzenie</th><th>E-mail</th><th>Status maila</th><th></th></tr></thead>
+    <tbody>
+      <% if (protocols.length === 0) { %><tr><td colspan="7" class="empty-state">Brak protokołów.</td></tr><% } %>
+      <% protocols.forEach(p => { %>
+        <tr>
+          <td class="muted"><%= p.signed_at %></td>
+          <td><span class="badge badge-<%= p.type === 'wydanie' ? 'wydany' : 'dostepny' %>"><%= p.type %></span></td>
+          <td><%= p.person %></td>
+          <td><%= p.device || '-' %> <span class="muted">(<%= p.serial_number || '-' %>)</span></td>
+          <td class="muted"><%= p.emailed_to || '-' %></td>
+          <td><span class="badge badge-<%= p.email_status || 'not_sent' %>"><%= p.email_status || 'not_sent' %></span></td>
+          <td style="display:flex; gap:6px;">
+            <a href="/protokoly/<%= p.id %>/pdf" target="_blank" class="btn btn-sm btn-secondary">PDF</a>
+            <form method="POST" action="/protokoly/<%= p.id %>/wyslij-ponownie">
+              <button class="btn btn-sm btn-secondary" type="submit">Wyślij ponownie</button>
+            </form>
+          </td>
+        </tr>
+      <% }) %>
+    </tbody>
+  </table>
+</div>
+<%- include('../partials/footer') %>

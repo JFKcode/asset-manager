@@ -1,0 +1,104 @@
+<%- include('../partials/header', { title: device.id ? 'Edytuj urządzenie' : 'Nowe urządzenie' }) %>
+<div class="page-header"><h1><%= device.id ? 'Edytuj urządzenie' : 'Nowe urządzenie' %></h1></div>
+
+<div class="card">
+  <form method="POST" action="<%= action %>" class="form-grid">
+    <div class="field">
+      <label>Nazwa / opis urządzenia</label>
+      <input type="text" name="device" value="<%= device.device || '' %>">
+    </div>
+    <div class="field">
+      <label>Kategoria</label>
+      <input type="text" name="category_id" placeholder="Laptop / Monitor / Drukarka / Serwer..." value="<%= device.category_id || '' %>">
+    </div>
+    <div class="field">
+      <label>Producent</label>
+      <input type="text" name="manufacturer" value="<%= device.manufacturer || '' %>">
+    </div>
+    <div class="field">
+      <label>Model</label>
+      <input type="text" name="model" value="<%= device.model || '' %>">
+    </div>
+    <div class="field">
+      <label>Typ urządzenia</label>
+      <input type="text" name="device_type" placeholder="Laptop, Monitor, Telefon..." value="<%= device.device_type || '' %>">
+    </div>
+    <div class="field">
+      <label>Numer inwentarzowy</label>
+      <input type="text" name="inventory_number" value="<%= device.inventory_number || '' %>">
+    </div>
+    <div class="field">
+      <label>Serial NR / Service Tag</label>
+      <input type="text" name="serial_number" value="<%= device.serial_number || '' %>">
+    </div>
+    <div class="field">
+      <label>Computer Name</label>
+      <input type="text" name="computer_name" value="<%= device.computer_name || '' %>">
+    </div>
+    <div class="field">
+      <label>Domena</label>
+      <input type="text" name="domena" value="<%= device.domena || '' %>">
+    </div>
+    <div class="field">
+      <label>Lokalizacja</label>
+      <input type="text" name="location_id" value="<%= device.location_id || '' %>">
+    </div>
+    <div class="field">
+      <label>Dział / departament</label>
+      <input type="text" name="department" value="<%= device.department || '' %>">
+    </div>
+    <div class="field">
+      <label>Pomieszczenie / sala</label>
+      <input type="text" name="room" value="<%= device.room || '' %>">
+    </div>
+    <div class="field">
+      <label>Przeznaczenie / używane do</label>
+      <input type="text" name="purpose" value="<%= device.purpose || '' %>">
+    </div>
+    <div class="field">
+      <label>Przypisanie do lokalizacji</label>
+      <input type="text" name="assigned_to_location" value="<%= device.assigned_to_location || '' %>">
+    </div>
+    <div class="field">
+      <label>MAC</label>
+      <input type="text" name="mac" value="<%= device.mac || '' %>">
+    </div>
+    <div class="field">
+      <label>VPN</label>
+      <input type="text" name="vpn" value="<%= device.vpn || '' %>">
+    </div>
+    <div class="field">
+      <label>VNC</label>
+      <input type="text" name="vnc" value="<%= device.vnc || '' %>">
+    </div>
+    <div class="field">
+      <label>AnyDesk</label>
+      <input type="text" name="anydesk" value="<%= device.anydesk || '' %>">
+    </div>
+    <div class="field">
+      <label>Data zakupu</label>
+      <input type="date" name="data_zakupu" value="<%= device.data_zakupu || '' %>">
+    </div>
+    <div class="field">
+      <label>Data końca gwarancji</label>
+      <input type="date" name="warranty_end_date" value="<%= device.warranty_end_date || '' %>">
+    </div>
+    <div class="field full checkbox-row">
+      <input type="checkbox" id="erp" name="is_using_erp" value="1" <%= device.is_using_erp ? 'checked' : '' %>>
+      <label for="erp" style="margin:0">Korzysta z ERP</label>
+    </div>
+    <div class="field full">
+      <label>Uwagi / opis</label>
+      <textarea name="notes" rows="3"><%= device.notes || '' %></textarea>
+    </div>
+    <div class="field full">
+      <label>Info</label>
+      <textarea name="info" rows="3"><%= device.info || '' %></textarea>
+    </div>
+    <div class="field full form-actions">
+      <button class="btn" type="submit">Zapisz</button>
+      <a href="/urzadzenia" class="btn btn-secondary">Anuluj</a>
+    </div>
+  </form>
+</div>
+<%- include('../partials/footer') %>

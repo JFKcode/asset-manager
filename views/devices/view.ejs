@@ -1,0 +1,79 @@
+<%- include('../partials/header', { title: device.device || 'Urządzenie' }) %>
+<div class="page-header">
+  <h1><%= device.device || '(bez nazwy)' %> <span class="badge badge-<%= device.status %>"><%= device.status %></span></h1>
+  <div style="display:flex; gap:8px;">
+    <a href="/urzadzenia/<%= device.id %>/edytuj" class="btn btn-secondary">Edytuj</a>
+    <% if (device.status === 'dostepny') { %>
+      <form method="POST" action="/urzadzenia/<%= device.id %>?_method=DELETE" onsubmit="return confirm('Usunąć urządzenie z listy?');">
+        <button class="btn btn-danger" type="submit">Usuń</button>
+      </form>
+    <% } %>
+  </div>
+</div>
+
+<div class="card">
+  <div class="detail-grid">
+    <div class="item"><div class="k">Typ</div><div class="v"><%= device.device_type || '-' %></div></div>
+    <div class="item"><div class="k">Serial NR / Service Tag</div><div class="v"><%= device.serial_number || '-' %></div></div>
+    <div class="item"><div class="k">Nazwa komputera</div><div class="v"><%= device.computer_name || '-' %></div></div>
+    <div class="item"><div class="k">Domena</div><div class="v"><%= device.domena || '-' %></div></div>
+    <div class="item"><div class="k">MAC</div><div class="v"><%= device.mac || '-' %></div></div>
+    <div class="item"><div class="k">VPN</div><div class="v"><%= device.vpn || '-' %></div></div>
+    <div class="item"><div class="k">VNC</div><div class="v"><%= device.vnc || '-' %></div></div>
+    <div class="item"><div class="k">AnyDesk</div><div class="v"><%= device.anydesk || '-' %></div></div>
+    <div class="item"><div class="k">ERP</div><div class="v"><%= device.is_using_erp ? 'Tak' : 'Nie' %></div></div>
+    <div class="item"><div class="k">Data zakupu</div><div class="v"><%= device.data_zakupu || '-' %></div></div>
+  </div>
+  <% if (device.info) { %><p class="muted" style="margin-top:14px;"><%= device.info %></p><% } %>
+
+  <% if (device.status !== 'dostepny' || true) { %>
+  <div style="margin-top:16px; border-top:1px solid var(--border); padding-top:14px;">
+    <form method="POST" action="/urzadzenia/<%= device.id %>/status?_method=PUT" style="display:flex; gap:8px; align-items:center;">
+      <label style="margin:0">Zmień status ręcznie:</label>
+      <select name="status">
+        <option value="dostepny" <%= device.status==='dostepny'?'selected':'' %>>Dostępny</option>
+        <option value="serwis" <%= device.status==='serwis'?'selected':'' %>>W serwisie</option>
+        <option value="zezlomowany" <%= device.status==='zezlomowany'?'selected':'' %>>Zezłomowany</option>
+      </select>
+      <button class="btn btn-sm btn-secondary" type="submit">Zapisz status</button>
+    </form>
+  </div>
+  <% } %>
+</div>
+
+<div class="section-title">Historia przypisań</div>
+<div class="table-wrap">
+  <table>
+    <thead><tr><th>Pracownik</th><th>Dział</th><th>Data wydania</th><th>Data zdania</th><th>Status</th></tr></thead>
+    <tbody>
+      <% if (assignments.length === 0) { %><tr><td colspan="5" class="empty-state">Brak historii przypisań.</td></tr><% } %>
+      <% assignments.forEach(a => { %>
+        <tr>
+          <td><a href="/pracownicy/<%= a.employee_id %>"><%= a.person %></a></td>
+          <td><%= a.department || '-' %></td>
+          <td><%= a.data_wydania || '-' %></td>
+          <td><%= a.data_zdania || '-' %></td>
+          <td><span class="badge badge-<%= a.status %>"><%= a.status %></span></td>
+        </tr>
+      <% }) %>
+    </tbody>
+  </table>
+</div>
+
+<div class="section-title">Dziennik zdarzeń</div>
+<div class="table-wrap">
+  <table>
+    <thead><tr><th>Data</th><th>Zdarzenie</th><th>Szczegóły</th><th>Wykonał</th></tr></thead>
+    <tbody>
+      <% history.forEach(h => { %>
+        <tr>
+          <td class="muted"><%= h.created_at %></td>
+          <td><%= h.event %></td>
+          <td class="muted"><%= h.details %></td>
+          <td class="muted"><%= h.user_name || '-' %></td>
+        </tr>
+      <% }) %>
+    </tbody>
+  </table>
+</div>
+<%- include('../partials/footer') %>

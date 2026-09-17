@@ -1,0 +1,41 @@
+<%- include('partials/header', { title: 'Pulpit' }) %>
+<div class="page-header"><h1>Pulpit</h1></div>
+
+<div class="stat-grid">
+  <div class="stat-card"><div class="num"><%= counts.total %></div><div class="label">Urządzenia łącznie</div></div>
+  <div class="stat-card"><div class="num"><%= counts.dostepny %></div><div class="label">Dostępne</div></div>
+  <div class="stat-card"><div class="num"><%= counts.wydany %></div><div class="label">Wydane</div></div>
+  <div class="stat-card"><div class="num"><%= counts.serwis %></div><div class="label">W serwisie</div></div>
+  <div class="stat-card"><div class="num"><%= counts.employees %></div><div class="label">Pracownicy</div></div>
+</div>
+
+<div class="card">
+  <div style="display:flex; gap:12px; flex-wrap:wrap;">
+    <a href="/protokoly/wydanie/nowy" class="btn">+ Wydaj sprzęt</a>
+    <a href="/protokoly/zdanie/nowy" class="btn btn-secondary">+ Przyjmij zwrot</a>
+    <a href="/urzadzenia/nowy" class="btn btn-secondary">+ Dodaj urządzenie</a>
+    <a href="/pracownicy/nowy" class="btn btn-secondary">+ Dodaj pracownika</a>
+  </div>
+</div>
+
+<div class="section-title">Ostatnia aktywność</div>
+<div class="table-wrap">
+  <table>
+    <thead><tr><th>Data</th><th>Zdarzenie</th><th>Urządzenie</th><th>Szczegóły</th><th>Wykonał</th></tr></thead>
+    <tbody>
+      <% if (recentHistory.length === 0) { %>
+        <tr><td colspan="5" class="empty-state">Brak aktywności.</td></tr>
+      <% } %>
+      <% recentHistory.forEach(h => { %>
+        <tr>
+          <td class="muted"><%= h.created_at %></td>
+          <td><%= h.event %></td>
+          <td><a href="/urzadzenia/<%= h.device_id %>"><%= h.device || h.serial_number %></a></td>
+          <td class="muted"><%= h.details %></td>
+          <td class="muted"><%= h.user_name || '-' %></td>
+        </tr>
+      <% }) %>
+    </tbody>
+  </table>
+</div>
+<%- include('partials/footer') %>

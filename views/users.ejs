@@ -1,0 +1,41 @@
+<%- include('partials/header', { title: 'Użytkownicy' }) %>
+<div class="page-header"><h1>Użytkownicy systemu</h1></div>
+
+<div class="card">
+  <div class="section-title" style="margin-top:0">Dodaj użytkownika</div>
+  <% if (error) { %><div class="error-box"><%= error %></div><% } %>
+  <form method="POST" action="/uzytkownicy" class="form-grid">
+    <div class="field"><label>Login</label><input type="text" name="username" required></div>
+    <div class="field"><label>Hasło</label><input type="password" name="password" required></div>
+    <div class="field"><label>Imię i nazwisko</label><input type="text" name="full_name"></div>
+    <div class="field">
+      <label>Rola</label>
+      <select name="role"><option value="user">Użytkownik (IT/HR)</option><option value="admin">Administrator</option></select>
+    </div>
+    <div class="field full form-actions" style="margin-top:0">
+      <button class="btn" type="submit">Dodaj użytkownika</button>
+    </div>
+  </form>
+</div>
+
+<div class="table-wrap">
+  <table>
+    <thead><tr><th>Login</th><th>Imię i nazwisko</th><th>Rola</th><th>Status</th><th></th></tr></thead>
+    <tbody>
+      <% users.forEach(u => { %>
+        <tr>
+          <td><%= u.username %></td>
+          <td><%= u.full_name || '-' %></td>
+          <td><%= u.role === 'admin' ? 'Administrator' : 'Użytkownik' %></td>
+          <td><%= u.active ? 'Aktywny' : 'Zablokowany' %></td>
+          <td>
+            <form method="POST" action="/uzytkownicy/<%= u.id %>/toggle">
+              <button class="btn btn-sm btn-secondary" type="submit"><%= u.active ? 'Zablokuj' : 'Odblokuj' %></button>
+            </form>
+          </td>
+        </tr>
+      <% }) %>
+    </tbody>
+  </table>
+</div>
+<%- include('partials/footer') %>

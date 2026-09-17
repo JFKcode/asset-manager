@@ -1,0 +1,23 @@
+<%- include('../partials/header', { title: 'Protokół zapisany' }) %>
+<div class="card result-box">
+  <% if (emailError) { %>
+    <div class="result-icon">⚠️</div>
+    <h2>Protokół zapisany, ale wysyłka e-mail nie powiodła się</h2>
+    <p class="muted"><%= emailError %></p>
+  <% } else { %>
+    <div class="result-icon">✅</div>
+    <h2>Protokół <%= type === 'wydanie' ? 'wydania' : 'zdania' %> zapisany</h2>
+    <% if (typeof emailStatus !== 'undefined' && emailStatus === 'ok') { %>
+      <p class="muted">Plik PDF wysłany na e-mail.</p>
+    <% } else { %>
+      <p class="muted">Mail nie został wysłany (nie zaznaczono opcji lub brak adresu e-mail).</p>
+    <% } %>
+  <% } %>
+
+  <div style="margin-top:20px; display:flex; gap:10px; justify-content:center; flex-wrap:wrap;">
+    <a href="/protokoly/<%= protocolId %>/pdf" target="_blank" class="btn">Podgląd / pobierz PDF</a>
+    <a href="/protokoly" class="btn btn-secondary">Lista protokołów</a>
+    <a href="/" class="btn btn-secondary">Pulpit</a>
+  </div>
+</div>
+<%- include('../partials/footer') %>

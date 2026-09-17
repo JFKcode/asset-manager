@@ -1,0 +1,77 @@
+<%- include('../partials/header', { title: 'Protokół wydania' }) %>
+<div class="page-header"><h1>Protokół wydania sprzętu</h1></div>
+
+<form method="POST" action="/protokoly/wydanie" id="issueForm">
+  <div class="card">
+    <div class="form-grid">
+      <div class="field">
+        <label>Pracownik</label>
+        <select name="employee_id" required>
+          <option value="">-- wybierz --</option>
+          <% employees.forEach(e => { %>
+            <option value="<%= e.id %>" data-email="<%= e.email || '' %>"><%= e.person %> (<%= e.department || '-' %>)</option>
+          <% }) %>
+        </select>
+      </div>
+      <div class="field">
+        <label>Urządzenie (tylko dostępne)</label>
+        <select name="device_id" required>
+          <option value="">-- wybierz --</option>
+          <% devices.forEach(d => { %>
+            <option value="<%= d.id %>"><%= d.device || '(bez nazwy)' %> — <%= d.serial_number || 'brak S/N' %></option>
+          <% }) %>
+        </select>
+      </div>
+      <div class="field">
+        <label>Data wydania</label>
+        <input type="date" name="data_wydania" value="<%= new Date().toISOString().slice(0,10) %>">
+      </div>
+      <div class="field">
+        <label>E-mail do wysyłki (opcjonalnie, nadpisuje e-mail pracownika)</label>
+        <input type="email" name="email_override" placeholder="pozostaw puste, aby użyć e-maila pracownika">
+      </div>
+    </div>
+    <div class="field checkbox-row" style="margin-top:6px;">
+      <input type="checkbox" id="send_email" name="send_email" value="1" checked>
+      <label for="send_email" style="margin:0">Wyślij protokół PDF na e-mail po podpisaniu</label>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="form-grid">
+      <div>
+        <div class="sig-label">Podpis pracownika (odbierającego)</div>
+        <div class="sig-wrap">
+          <canvas id="sigPerson"></canvas>
+        </div>
+        <div class="sig-actions">
+          <button id="clearPerson" class="btn btn-sm btn-secondary">Wyczyść</button>
+        </div>
+        <input type="hidden" name="signature_person" id="sigPersonInput">
+      </div>
+      <div>
+        <div class="sig-label">Podpis wydającego (IT/HR)</div>
+        <div class="sig-wrap">
+          <canvas id="sigIssuer"></canvas>
+        </div>
+        <div class="sig-actions">
+          <button id="clearIssuer" class="btn btn-sm btn-secondary">Wyczyść</button>
+        </div>
+        <input type="hidden" name="signature_issuer" id="sigIssuerInput">
+      </div>
+    </div>
+    <p class="muted" style="margin-top:10px;">Wskazówka: na tablecie podpisz się palcem lub rysikiem bezpośrednio w polu powyżej.</p>
+  </div>
+
+  <div class="form-actions">
+    <button type="submit" class="btn">Zapisz i wygeneruj protokół</button>
+    <a href="/" class="btn btn-secondary">Anuluj</a>
+  </div>
+</form>
+
+<script src="/js/signature.js"></script>
+<script>
+  initSignaturePad('sigPerson', 'sigPersonInput', 'clearPerson');
+  initSignaturePad('sigIssuer', 'sigIssuerInput', 'clearIssuer');
+</script>
+<%- include('../partials/footer') %>
