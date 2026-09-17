@@ -8,37 +8,98 @@
         <button class="btn btn-danger" type="submit">Usuń</button>
       </form>
     <% } %>
+    <% if (device.status !== 'utylizacja') { %>
+      <form method="POST" action="/urzadzenia/<%= device.id %>/utylizacja" onsubmit="return confirm('Przenieść urządzenie do utylizacji?');">
+        <button class="btn btn-danger" type="submit">Utylizacja</button>
+      </form>
+    <% } %>
   </div>
 </div>
 
 <div class="card">
   <div class="detail-grid">
+    <div class="item"><div class="k">Kategoria</div><div class="v"><%= device.category_name || '-' %></div></div>
+    <div class="item"><div class="k">Producent</div><div class="v"><%= device.manufacturer || '-' %></div></div>
+    <div class="item"><div class="k">Model</div><div class="v"><%= device.model || '-' %></div></div>
     <div class="item"><div class="k">Typ</div><div class="v"><%= device.device_type || '-' %></div></div>
+    <div class="item"><div class="k">Nr inwentarzowy</div><div class="v"><%= device.inventory_number || '-' %></div></div>
     <div class="item"><div class="k">Serial NR / Service Tag</div><div class="v"><%= device.serial_number || '-' %></div></div>
     <div class="item"><div class="k">Nazwa komputera</div><div class="v"><%= device.computer_name || '-' %></div></div>
     <div class="item"><div class="k">Domena</div><div class="v"><%= device.domena || '-' %></div></div>
+    <div class="item"><div class="k">Lokalizacja</div><div class="v"><%= device.location_name || device.assigned_to_location || '-' %></div></div>
+    <div class="item"><div class="k">Dział / departament</div><div class="v"><%= device.department || '-' %></div></div>
+    <div class="item"><div class="k">Pomieszczenie / sala</div><div class="v"><%= device.room || '-' %></div></div>
+    <div class="item"><div class="k">Przeznaczenie</div><div class="v"><%= device.purpose || '-' %></div></div>
     <div class="item"><div class="k">MAC</div><div class="v"><%= device.mac || '-' %></div></div>
     <div class="item"><div class="k">VPN</div><div class="v"><%= device.vpn || '-' %></div></div>
     <div class="item"><div class="k">VNC</div><div class="v"><%= device.vnc || '-' %></div></div>
     <div class="item"><div class="k">AnyDesk</div><div class="v"><%= device.anydesk || '-' %></div></div>
     <div class="item"><div class="k">ERP</div><div class="v"><%= device.is_using_erp ? 'Tak' : 'Nie' %></div></div>
     <div class="item"><div class="k">Data zakupu</div><div class="v"><%= device.data_zakupu || '-' %></div></div>
+    <div class="item"><div class="k">Koniec gwarancji</div><div class="v"><%= device.warranty_end_date || '-' %></div></div>
   </div>
-  <% if (device.info) { %><p class="muted" style="margin-top:14px;"><%= device.info %></p><% } %>
 
-  <% if (device.status !== 'dostepny' || true) { %>
+  <% if (device.notes) { %><p class="muted" style="margin-top:14px;"><strong>Uwagi:</strong> <%= device.notes %></p><% } %>
+  <% if (device.info) { %><p class="muted" style="margin-top:8px;"><strong>Info:</strong> <%= device.info %></p><% } %>
+
   <div style="margin-top:16px; border-top:1px solid var(--border); padding-top:14px;">
-    <form method="POST" action="/urzadzenia/<%= device.id %>/status?_method=PUT" style="display:flex; gap:8px; align-items:center;">
+    <form method="POST" action="/urzadzenia/<%= device.id %>/przypisz" style="display:grid; gap:12px; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); align-items:end;">
+      <div>
+        <label>Pracownik</label>
+        <select name="employee_id">
+          <option value="">Brak przypisania do pracownika</option>
+          <% employees.forEach(emp => { %>
+            <option value="<%= emp.id %>" <%= device.assigned_to_employee_id == emp.id ? 'selected' : '' %>><%= emp.person %> (<%= emp.department || 'brak działu' %>)</option>
+          <% }) %>
+        </select>
+      </div>
+      <div>
+        <label>Dział</label>
+        <input type="text" name="department" value="<%= device.department || '' %>">
+      </div>
+      <div>
+        <label>Pomieszczenie / sala</label>
+        <input type="text" name="room" value="<%= device.room || '' %>">
+      </div>
+      <div>
+        <label>Lokalizacja / miejsce</label>
+        <input type="text" name="assigned_to_location" value="<%= device.assigned_to_location || '' %>">
+      </div>
+      <div>
+        <label>Przeznaczenie</label>
+        <input type="text" name="purpose" value="<%= device.purpose || '' %>">
+      </div>
+      <div>
+        <button class="btn btn-secondary" type="submit">Zapisz przypisanie</button>
+      </div>
+    </form>
+  </div>
+
+  <% if (device.assigned_to_employee_id || device.assigned_to_location || device.status === 'wydany') { %>
+    <div style="margin-top:16px; border-top:1px solid var(--border); padding-top:14px;">
+      <form method="POST" action="/urzadzenia/<%= device.id %>/zwrot" style="display:flex; gap:8px; align-items:end; flex-wrap:wrap;">
+        <div style="flex:1; min-width:240px;">
+          <label>Opis zwrotu</label>
+          <input type="text" name="details" placeholder="np. zwrot po zakończeniu pracy">
+        </div>
+        <button class="btn btn-secondary" type="submit">Zapisz zwrot</button>
+      </form>
+    </div>
+  <% } %>
+
+  <div style="margin-top:16px; border-top:1px solid var(--border); padding-top:14px;">
+    <form method="POST" action="/urzadzenia/<%= device.id %>/status?_method=PUT" style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
       <label style="margin:0">Zmień status ręcznie:</label>
       <select name="status">
         <option value="dostepny" <%= device.status==='dostepny'?'selected':'' %>>Dostępny</option>
+        <option value="wydany" <%= device.status==='wydany'?'selected':'' %>>Wydany</option>
         <option value="serwis" <%= device.status==='serwis'?'selected':'' %>>W serwisie</option>
         <option value="zezlomowany" <%= device.status==='zezlomowany'?'selected':'' %>>Zezłomowany</option>
+        <option value="utylizacja" <%= device.status==='utylizacja'?'selected':'' %>>Utylizacja</option>
       </select>
       <button class="btn btn-sm btn-secondary" type="submit">Zapisz status</button>
     </form>
   </div>
-  <% } %>
 </div>
 
 <div class="section-title">Historia przypisań</div>

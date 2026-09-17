@@ -20,6 +20,7 @@
     <option value="wydany" <%= status==='wydany'?'selected':'' %>>Wydany</option>
     <option value="serwis" <%= status==='serwis'?'selected':'' %>>W serwisie</option>
     <option value="zezlomowany" <%= status==='zezlomowany'?'selected':'' %>>Zezłomowany</option>
+    <option value="utylizacja" <%= status==='utylizacja'?'selected':'' %>>Utylizacja</option>
   </select>
 
   <select name="location_id">
@@ -30,6 +31,17 @@
   </select>
 
   <input type="text" name="department" placeholder="Dział" value="<%= department %>">
+  <select name="employee_id">
+    <option value="">Wszyscy pracownicy</option>
+    <% employees.forEach(employee => { %>
+      <option value="<%= employee.id %>" <%= employee_id == employee.id ? 'selected' : '' %>><%= employee.person %></option>
+    <% }) %>
+  </select>
+  <select name="active">
+    <option value="1" <%= active === '1' ? 'selected' : '' %>>Tylko aktywne</option>
+    <option value="0" <%= active === '0' ? 'selected' : '' %>>Tylko nieaktywne</option>
+    <option value="all" <%= active === 'all' ? 'selected' : '' %>>Aktywne i nieaktywne</option>
+  </select>
   <button class="btn btn-secondary" type="submit">Filtruj</button>
 </form>
 
@@ -59,7 +71,10 @@
           <td><%= d.serial_number || '-' %></td>
           <td><%= d.location_name || d.assigned_to_location || '-' %></td>
           <td><%= d.department || '-' %></td>
-          <td><span class="badge badge-<%= d.status %>"><%= d.status %></span></td>
+          <td>
+            <span class="badge badge-<%= d.status %>"><%= d.status %></span>
+            <% if (!d.active) { %><span class="badge badge-inactive">Nieaktywne</span><% } %>
+          </td>
           <td><a href="/urzadzenia/<%= d.id %>/edytuj" class="btn btn-sm btn-secondary">Edytuj</a></td>
         </tr>
       <% }) %>

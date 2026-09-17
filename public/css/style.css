@@ -66,6 +66,8 @@ a:hover { text-decoration: underline; }
 }
 .stat-card .num { font-size: 1.8rem; font-weight: 700; color: var(--primary); }
 .stat-card .label { color: var(--ink-soft); font-size: .82rem; margin-top: 4px; }
+.stat-link { display: block; color: inherit; transition: border-color .15s ease, transform .15s ease; }
+.stat-link:hover { text-decoration: none; border-color: var(--primary); transform: translateY(-1px); }
 
 /* Buttons */
 .btn {
@@ -108,6 +110,8 @@ tr:hover td { background: #fafbfa; }
 .badge-wydany { background: #fbe9de; color: var(--accent); }
 .badge-serwis { background: #f0e2e2; color: var(--danger); }
 .badge-zezlomowany { background: #e6e6e6; color: #555; }
+.badge-utylizacja { background: #eadede; color: #7d3030; }
+.badge-inactive { background: #e6e6e6; color: #555; }
 .badge-aktywne { background: #e1efe6; color: var(--ok); }
 .badge-zakonczone { background: #e6e6e6; color: #555; }
 .badge-ok { background: #e1efe6; color: var(--ok); }

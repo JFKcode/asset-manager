@@ -19,77 +19,76 @@ Rozbudować system z prostego zarządzania wydaniem sprzętu do pełnej ewidencj
 ## Epic 1: Model danych i baza
 
 ### 1.1. Rozszerzenie tabeli devices
-- [ ] dodać pole category
-- [ ] dodać pole manufacturer
-- [ ] dodać pole model
-- [ ] dodać pole inventory_number
-- [ ] dodać pole location
-- [ ] dodać pole department
-- [ ] dodać pole room
-- [ ] dodać pole assigned_to_employee_id
-- [ ] dodać pole assigned_to_location
-- [ ] dodać pole purpose
-- [ ] dodać pole purchase_date
-- [ ] dodać pole warranty_end_date
-- [ ] dodać pole notes
-- [ ] dodać pole active
-- [ ] dodać pole created_at
-- [ ] dodać pole updated_at
+- [x] dodać pole category_id
+- [x] dodać pole manufacturer
+- [x] dodać pole model
+- [x] dodać pole inventory_number
+- [x] dodać pole location_id
+- [x] dodać pole department
+- [x] dodać pole room
+- [x] dodać pole assigned_to_employee_id
+- [x] dodać pole assigned_to_location
+- [x] dodać pole purpose
+- [x] dodać pole warranty_end_date
+- [x] dodać pole notes
+- [x] dodać pole active
+- [x] dodać pole created_at
+- [x] dodać pole updated_at
 
 ### 1.2. Dodanie tabeli categories
-- [ ] utworzyć tabelę device_categories
-- [ ] dodać wartości: laptop, monitor, drukarka, serwer, switch, router, inne
-- [ ] podłączyć relację do devices.category_id
+- [x] utworzyć tabelę device_categories
+- [x] dodać wartości: laptop, monitor, drukarka, serwer, switch, router, inne
+- [x] podłączyć relację do devices.category_id
 
 ### 1.3. Dodanie tabeli locations
-- [ ] utworzyć tabelę locations
-- [ ] dodać pola: name, type, parent_id, department
-- [ ] obsłużyć lokalizacje: biuro, sala, serwerownia, recepcja, magazyn
+- [x] utworzyć tabelę locations
+- [x] dodać pola: name, type, parent_id, department
+- [x] obsłużyć lokalizacje: biuro, sala, serwerownia, recepcja, magazyn
 
 ### 1.4. Dodanie tabeli assignments
-- [ ] utworzyć tabelę device_assignments
-- [ ] dodać pola: device_id, employee_id, assigned_from, assigned_to, assignment_type, notes
-- [ ] obsłużyć przypisanie do pracownika oraz do miejsca
+- [x] utworzyć tabelę assignments
+- [x] dodać pola: device_id, employee_id, data_wydania, data_zdania, status
+- [x] obsłużyć przypisanie do pracownika oraz do miejsca
 
 ### 1.5. Dodanie tabeli device_history
-- [ ] rozszerzyć istniejący model historii o typ zdarzenia
-- [ ] dodać status change, assignment change, location move, service event
+- [x] rozszerzyć istniejący model historii o typ zdarzenia
+- [x] dodać zdarzenia typu utworzono, edycja, zmiana_statusu, przypisanie, lokalizacja
 
 ### 1.6. Migracja danych istniejących
-- [ ] zadbać o kompatybilność z istniejącymi rekordami urządzeń
-- [ ] przenieść obecne pola do nowego modelu
-- [ ] sprawdzić brakujące dane w istniejących wpisach
+- [x] zadbać o kompatybilność z istniejącymi rekordami urządzeń
+- [x] dodać brakujące pola w tabeli
+- [x] sprawdzić poprawność struktury bazy
 
 ---
 
 ## Epic 2: Formularze urządzeń
 
 ### 2.1. Ujednolicenie formularza urządzenia
-- [ ] zmienić prosty formularz z danymi podstawowymi na uniwersalny formularz aktywa
-- [ ] dodać sekcję Dane podstawowe
-- [ ] dodać sekcję Lokalizacja
-- [ ] dodać sekcję Przypisanie
-- [ ] dodać sekcję Status
-- [ ] dodać sekcję Notatki
+- [x] zmienić prosty formularz z danymi podstawowymi na uniwersalny formularz aktywa
+- [x] dodać sekcję Dane podstawowe
+- [x] dodać sekcję Lokalizacja
+- [x] dodać sekcję Przypisanie
+- [x] dodać sekcję Status
+- [x] dodać sekcję Notatki
 
 ### 2.2. Dodanie pól do formularza
-- [ ] typ urządzenia
-- [ ] producent
-- [ ] model
-- [ ] numer seryjny
-- [ ] numer inwentarzowy
-- [ ] lokalizacja
-- [ ] dział
-- [ ] pomieszczenie
-- [ ] przypisanie do pracownika
-- [ ] przypisanie do stanowiska
-- [ ] cel użytkowania
-- [ ] data zakupu
-- [ ] data gwarancji
-- [ ] status
+- [x] typ urządzenia
+- [x] producent
+- [x] model
+- [x] numer seryjny
+- [x] numer inwentarzowy
+- [x] lokalizacja
+- [x] dział
+- [x] pomieszczenie
+- [x] przypisanie do pracownika
+- [x] przypisanie do stanowiska / miejsca
+- [x] cel użytkowania
+- [x] data zakupu
+- [x] data gwarancji
+- [x] status
 
 ### 2.3. Obsługa edycji
-- [ ] umożliwić edycję wszystkich pól
+- [x] umożliwić edycję wszystkich pól
 - [ ] dodać walidację wymaganych pól
 - [ ] dodać komunikat potwierdzający zapis
 
@@ -102,17 +101,17 @@ Rozbudować system z prostego zarządzania wydaniem sprzętu do pełnej ewidencj
 ## Epic 3: Wyszukiwanie i filtrowanie
 
 ### 3.1. Wyszukiwarka tekstowa
-- [ ] dodać pole search na liście urządzeń
-- [ ] wyszukiwanie po: model, producent, numer seryjny, numer inwentarzowy, lokalizacja
+- [x] dodać pole search na liście urządzeń
+- [x] wyszukiwanie po: model, producent, numer seryjny, numer inwentarzowy, lokalizacja
 
 ### 3.2. Filtry
-- [ ] filtr po typie urządzenia
-- [ ] filtr po statusie
-- [ ] filtr po lokalizacji
-- [ ] filtr po dziale
-- [ ] filtr po pracowniku
+- [x] filtr po typie urządzenia / kategorii
+- [x] filtr po statusie
+- [x] filtr po lokalizacji
+- [x] filtr po dziale
+- [x] filtr po pracowniku
 - [ ] filtr po pomieszczeniu
-- [ ] filtr po aktywnych / nieaktywnych
+- [x] filtr po aktywnych / nieaktywnych
 
 ### 3.3. Sortowanie
 - [ ] sortowanie po nazwie
@@ -121,77 +120,87 @@ Rozbudować system z prostego zarządzania wydaniem sprzętu do pełnej ewidencj
 - [ ] sortowanie po statusie
 
 ### 3.4. Widok listy urządzeń
-- [ ] dodać kolumny: typ, nazwa, lokalizacja, status, pracownik / dział
-- [ ] dodać szybkie linki do szczegółów
+- [x] dodać kolumny: kategoria, typ, lokalizacja, status, dział
+- [x] dodać szybkie linki do szczegółów
 
 ---
 
 ## Epic 4: Przypisania i wydania urządzeń
 
 ### 4.1. Rozdzielenie logiki dla laptopów i pozostałych urządzeń
-- [ ] laptop = przypisanie do pracownika
-- [ ] monitor = przypisanie do stanowiska / pomieszczenia
-- [ ] drukarka = przypisanie do działu / miejsca pracy
-- [ ] serwer / switch = przypisanie do lokalizacji technicznej
+- [x] laptop = przypisanie do pracownika
+- [x] monitor = przypisanie do stanowiska / pomieszczenia
+- [x] drukarka = przypisanie do działu / miejsca pracy
+- [x] serwer / switch = przypisanie do lokalizacji technicznej
 
 ### 4.2. Funkcjonalność wydania
-- [ ] wydanie urządzenia do pracownika
-- [ ] wydanie urządzenia do lokalizacji
-- [ ] zapis daty wydania
+- [x] wydanie urządzenia do pracownika
+- [x] wydanie urządzenia do lokalizacji
+- [x] zapis daty wydania
 - [ ] zapis odpowiedzialnej osoby
 
 ### 4.3. Funkcjonalność zwrotu
-- [ ] zwrot urządzenia z pracownika
-- [ ] zwrot urządzenia z lokalizacji
-- [ ] automatyczna zmiana statusu na dostępny / magazyn
+- [x] zwrot urządzenia z pracownika
+- [x] zwrot urządzenia z lokalizacji
+- [x] automatyczna zmiana statusu na dostępny / magazyn
+- [x] przeniesienie urządzenia do statusu utylizacja
 
 ### 4.4. Historia przypisań
-- [ ] zapisywać każdą zmianę przypisania
-- [ ] zachować dane kto i kiedy przeniósł urządzenie
+- [x] zapisywać każdą zmianę przypisania
+- [x] zachować dane kto i kiedy przeniósł urządzenie
 
 ---
 
 ## Epic 5: Historia i audyt
 
 ### 5.1. Rozszerzenie tabeli event log
-- [ ] dodać typ zdarzenia
-- [ ] dodać źródło zdarzenia
-- [ ] dodać opis zmiany
-- [ ] dodać użytkownika wykonującego zmianę
+- [x] dodać typ zdarzenia
+- [x] dodać opis zmiany
+- [x] dodać użytkownika wykonującego zmianę
 
 ### 5.2. Zdarzenia do obsługi
-- [ ] utworzono urządzenie
-- [ ] zaktualizowano dane
-- [ ] zmieniono status
-- [ ] przypisano do pracownika
-- [ ] przypisano do lokalizacji
-- [ ] zwrócono urządzenie
+- [x] utworzono urządzenie
+- [x] zaktualizowano dane
+- [x] zmieniono status
+- [x] przypisano do pracownika
+- [x] przypisano do lokalizacji
+- [x] zwrócono urządzenie
+- [x] wycofano urządzenie do utylizacji
 - [ ] wysłano do serwisu
 - [ ] przywrócono do użycia
 
 ### 5.3. Widok historii urządzenia
-- [ ] na stronie szczegółów dodać sekcję timeline
-- [ ] wyświetlać datę, typ zdarzenia i opis
+- [x] na stronie szczegółów dodać sekcję historii zdarzeń
+- [x] wyświetlać datę, zdarzenie i opis
 
 ---
 
 ## Epic 6: Raporty i statystyki
 
 ### 6.1. Dashboard aktywów
-- [ ] liczba urządzeń w każdym typie
-- [ ] liczba urządzeń w użyciu
-- [ ] liczba urządzeń w magazynie
-- [ ] liczba urządzeń w serwisie
+- [x] liczba urządzeń w każdym typie
+- [x] liczba urządzeń w użyciu
+- [x] liczba urządzeń w magazynie
+- [x] liczba urządzeń w serwisie
 - [ ] liczba urządzeń przypisanych do działów
+- [x] kliknięcie w status prowadzi do przefiltrowanej listy urządzeń
+- [x] kliknięcie w kategorię prowadzi do przefiltrowanej listy urządzeń
+- [x] kliknięcie w lokalizację prowadzi do przefiltrowanej listy urządzeń
 
 ### 6.2. Raport według lokalizacji
-- [ ] liczba urządzeń wg biura / sali / działu
-- [ ] podgląd wszystkich aktywów w konkretnej lokalizacji
+- [x] liczba urządzeń wg lokalizacji
+- [x] podgląd wszystkich aktywów w konkretnej lokalizacji
+
+### 6.5. Raporty operacyjne
+- [x] raport urządzeń przypisanych do pracowników
+- [x] raport urządzeń według działów
+- [x] filtrowanie raportów po dziale, lokalizacji, kategorii i statusie
+- [x] linki z raportów do przefiltrowanej listy urządzeń
 
 ### 6.3. Raport według statusów
-- [ ] dostępne
-- [ ] wydane
-- [ ] serwis
+- [x] dostępne
+- [x] wydane
+- [x] serwis
 - [ ] magazyn
 - [ ] nieaktywne
 
@@ -211,6 +220,7 @@ Rozbudować system z prostego zarządzania wydaniem sprzętu do pełnej ewidencj
 - [ ] sprawdzić historię urządzenia
 
 ### 7.2. Testy błędów
+- [x] smoke test przepływu dodanie -> przypisanie -> zwrot -> utylizacja -> deaktywacja
 - [ ] brakujące pola przy dodawaniu
 - [ ] brakujące relacje przy edycji
 - [ ] błędne statusy przy zwrocie
@@ -225,17 +235,21 @@ Rozbudować system z prostego zarządzania wydaniem sprzętu do pełnej ewidencj
 
 ## Priorytet wdrożenia
 
-### P1 - natychmiastowo
+### P1 - zrobione / obecnie gotowe
 - model danych i baza
 - typy urządzeń
 - lokalizacje i statusy
 - przypisania
 - wyszukiwanie i filtrowanie
+- dashboard aktywów
+- historia zdarzeń
 
 ### P2 - kolejna iteracja
-- historia zdarzeń
-- formularze edycji urządzenia
-- raporty podstawowe
+- raport po pracownikach
+- raport po lokalizacjach / działach
+- podgląd urządzeń według miejsca przypisania
+- sortowanie i finalne filtry listy urządzeń
+- poprawa walidacji i deaktywacji urządzeń
 
 ### P3 - później
 - import/eksport danych

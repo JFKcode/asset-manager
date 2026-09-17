@@ -5,7 +5,8 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "seed": "node db/init.js"
+    "seed": "node db/init.js",
+    "test": "node scripts/smoke-test.js"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",

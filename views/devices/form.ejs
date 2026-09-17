@@ -9,13 +9,18 @@
     </div>
     <div class="field">
       <label>Kategoria</label>
-      <input type="text" name="category_id" placeholder="Laptop / Monitor / Drukarka / Serwer..." value="<%= device.category_id || '' %>">
+      <select name="category_id" id="category_id" required>
+        <option value="">Wybierz kategorię</option>
+        <% categories.forEach(category => { %>
+          <option value="<%= category.id %>" data-slug="<%= category.slug %>" <%= device.category_id == category.id ? 'selected' : '' %>><%= category.name %></option>
+        <% }) %>
+      </select>
     </div>
     <div class="field">
       <label>Producent</label>
       <input type="text" name="manufacturer" value="<%= device.manufacturer || '' %>">
     </div>
-    <div class="field">
+    <div class="field monitor-field">
       <label>Model</label>
       <input type="text" name="model" value="<%= device.model || '' %>">
     </div>
@@ -28,38 +33,43 @@
       <input type="text" name="inventory_number" value="<%= device.inventory_number || '' %>">
     </div>
     <div class="field">
-      <label>Serial NR / Service Tag</label>
+      <label id="serial-label">Serial NR / Service Tag</label>
       <input type="text" name="serial_number" value="<%= device.serial_number || '' %>">
     </div>
-    <div class="field">
+    <div class="field laptop-field">
       <label>Computer Name</label>
       <input type="text" name="computer_name" value="<%= device.computer_name || '' %>">
     </div>
-    <div class="field">
+    <div class="field laptop-field">
       <label>Domena</label>
       <input type="text" name="domena" value="<%= device.domena || '' %>">
     </div>
     <div class="field">
       <label>Lokalizacja</label>
-      <input type="text" name="location_id" value="<%= device.location_id || '' %>">
+      <select name="location_id">
+        <option value="">Wybierz lokalizację</option>
+        <% locations.forEach(location => { %>
+          <option value="<%= location.id %>" <%= device.location_id == location.id ? 'selected' : '' %>><%= location.name %></option>
+        <% }) %>
+      </select>
     </div>
-    <div class="field">
+    <div class="field laptop-field">
       <label>Dział / departament</label>
       <input type="text" name="department" value="<%= device.department || '' %>">
     </div>
-    <div class="field">
+    <div class="field laptop-field">
       <label>Pomieszczenie / sala</label>
       <input type="text" name="room" value="<%= device.room || '' %>">
     </div>
-    <div class="field">
+    <div class="field laptop-field">
       <label>Przeznaczenie / używane do</label>
       <input type="text" name="purpose" value="<%= device.purpose || '' %>">
     </div>
-    <div class="field">
+    <div class="field laptop-field">
       <label>Przypisanie do lokalizacji</label>
       <input type="text" name="assigned_to_location" value="<%= device.assigned_to_location || '' %>">
     </div>
-    <div class="field">
+    <div class="field laptop-field">
       <label>MAC</label>
       <input type="text" name="mac" value="<%= device.mac || '' %>">
     </div>
@@ -102,3 +112,19 @@
   </form>
 </div>
 <%- include('../partials/footer') %>
+
+<script>
+  const categorySelect = document.getElementById('category_id');
+  const serialLabel = document.getElementById('serial-label');
+  const laptopFields = document.querySelectorAll('.laptop-field');
+
+  function updateCategoryFields() {
+    const slug = categorySelect.options[categorySelect.selectedIndex]?.dataset.slug;
+    const isMonitor = slug === 'monitor';
+    laptopFields.forEach(field => { field.hidden = isMonitor; });
+    serialLabel.textContent = isMonitor ? 'ServiceTag' : 'Serial NR / Service Tag';
+  }
+
+  categorySelect.addEventListener('change', updateCategoryFields);
+  updateCategoryFields();
+</script>

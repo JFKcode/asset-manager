@@ -299,3 +299,33 @@ To, czego naprawdę potrzebujesz, to nie tylko „bardziej rozbudowane urządzen
 - historią i wyszukiwaniem.
 
 To jest najważniejszy kolejny krok rozwoju tego projektu.
+
+---
+
+## Aktualny stan wdrożenia
+
+### Zrealizowane
+
+- model urządzeń dla wielu typów sprzętu,
+- kategorie, lokalizacje, przypisania i historia zdarzeń,
+- filtrowanie listy urządzeń i raporty operacyjne,
+- dashboard z licznikami statusów, kategorii i lokalizacji,
+- przejścia z dashboardu do przefiltrowanej listy urządzeń,
+- filtrowanie urządzeń aktywnych i nieaktywnych,
+- zwrot urządzenia z zakończeniem przypisania,
+- status `utylizacja` z zapisem w historii.
+
+### Obecny priorytet: poprawny szkielet
+
+1. Domknąć podstawowe przepływy danych: dodanie, edycja, przypisanie, zwrot i utylizacja.
+2. Dodać filtrowanie urządzeń nieaktywnych oraz sprawdzić spójność danych po operacjach.
+3. Przygotować podstawowe testy przepływów i przypadków błędnych.
+4. Dopiero po stabilizacji przejść do końcowych poprawek UX i osobnych formularzy dla typów urządzeń.
+
+### Następne funkcje po stabilizacji
+
+- widok urządzeń nieaktywnych i wycofanych,
+- eksport CSV/PDF,
+- rozbudowane formularze zależne od typu urządzenia,
+- import danych z istniejących arkuszy,
+- dalsze usprawnienia UX.
