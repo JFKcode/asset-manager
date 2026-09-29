@@ -5,20 +5,19 @@
 </div>
 
 <form class="search-bar" method="GET" action="/pracownicy">
-  <input type="text" name="q" placeholder="Szukaj: osoba, dział, linia..." value="<%= q %>">
+  <input type="text" name="q" placeholder="Szukaj: osoba lub dział..." value="<%= q %>">
   <button class="btn btn-secondary" type="submit">Filtruj</button>
 </form>
 
 <div class="table-wrap">
   <table>
-    <thead><tr><th>Osoba</th><th>Dział</th><th>Linia</th><th>E-mail</th><th></th></tr></thead>
+    <thead><tr><th>Osoba</th><th>Dział</th><th>E-mail</th><th></th></tr></thead>
     <tbody>
-      <% if (employees.length === 0) { %><tr><td colspan="5" class="empty-state">Brak pracowników.</td></tr><% } %>
+      <% if (employees.length === 0) { %><tr><td colspan="4" class="empty-state">Brak pracowników.</td></tr><% } %>
       <% employees.forEach(e => { %>
-        <tr>
+        <tr class="clickable-row" data-href="/pracownicy/<%= e.id %>" tabindex="0" role="link">
           <td><a href="/pracownicy/<%= e.id %>"><%= e.person %></a></td>
           <td><%= e.department || '-' %></td>
-          <td><%= e.line || '-' %></td>
           <td><%= e.email || '-' %></td>
           <td><a href="/pracownicy/<%= e.id %>/edytuj" class="btn btn-sm btn-secondary">Edytuj</a></td>
         </tr>
@@ -27,3 +26,17 @@
   </table>
 </div>
 <%- include('../partials/footer') %>
+
+<script>
+  document.querySelectorAll('.clickable-row').forEach(row => {
+    row.addEventListener('click', event => {
+      if (event.target.closest('a, button, input, select, textarea')) return;
+      window.location.href = row.dataset.href;
+    });
+    row.addEventListener('keydown', event => {
+      if (event.key !== 'Enter' && event.key !== ' ') return;
+      event.preventDefault();
+      window.location.href = row.dataset.href;
+    });
+  });
+</script>

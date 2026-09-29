@@ -4,8 +4,15 @@
 <div class="card">
   <form method="POST" action="<%= action %>" class="form-grid">
     <div class="field"><label>Osoba (imię i nazwisko)</label><input type="text" name="person" value="<%= employee.person || '' %>" required></div>
-    <div class="field"><label>Dział</label><input type="text" name="department" value="<%= employee.department || '' %>"></div>
-    <div class="field"><label>Linia</label><input type="text" name="line" value="<%= employee.line || '' %>"></div>
+    <div class="field">
+      <label for="department">Dział</label>
+      <select name="department" id="department">
+        <option value="">Wybierz dział</option>
+        <% ['Hoste', 'Purchase', 'Marketing', 'HR', 'Mechanic', 'electric', 'Packing', 'Accounting', 'Admin', 'Production', 'Planning', 'BHP', 'QC', 'Węgry', 'IT', 'Club', 'Office', 'Security', 'Logistic'].forEach(department => { %>
+          <option value="<%= department %>" <%= employee.department === department ? 'selected' : '' %>><%= department %></option>
+        <% }) %>
+      </select>
+    </div>
     <div class="field"><label>E-mail (do wysyłki protokołów)</label><input type="email" name="email" value="<%= employee.email || '' %>"></div>
     <div class="field full"><label>Info</label><textarea name="info" rows="3"><%= employee.info || '' %></textarea></div>
     <div class="field full form-actions">

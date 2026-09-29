@@ -8,10 +8,14 @@ const router = express.Router();
 router.get('/', requireLogin, (req, res) => {
   const { q, status, category_id, location_id, department, employee_id } = req.query;
   const active = ['0', 'all'].includes(req.query.active) ? req.query.active : '1';
-  let sql = `SELECT d.*, c.name AS category_name, l.name AS location_name
+  let sql = `SELECT d.*, c.name AS category_name, l.name AS location_name, a.id AS assignment_id,
+    COALESCE(e.person, assigned_e.person) AS assigned_employee_name
     FROM devices d
     LEFT JOIN device_categories c ON c.id = d.category_id
     LEFT JOIN locations l ON l.id = d.location_id
+    LEFT JOIN assignments a ON a.device_id = d.id AND a.status = 'aktywne'
+    LEFT JOIN employees e ON e.id = a.employee_id
+    LEFT JOIN employees assigned_e ON assigned_e.id = d.assigned_to_employee_id
     WHERE 1 = 1`;
   const params = [];
 
@@ -58,10 +62,10 @@ router.post('/', requireLogin, (req, res) => {
   const b = req.body;
   const info = db.prepare(`INSERT INTO devices
     (device, category_id, manufacturer, model, serial_number, inventory_number, device_type, domena, computer_name,
-     is_using_erp, vnc, vpn, anydesk, mac, info, location_id, department, room, assigned_to_employee_id,
+     is_using_erp, vnc, vpn, anydesk, mac, ip_address, info, location_id, department, room, assigned_to_employee_id,
      assigned_to_location, purpose, data_zakupu, warranty_end_date, notes, status)
     VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,'dostepny')`).run(
-    b.device,
+    b.device || b.model || b.computer_name || null,
     b.category_id || null,
     b.manufacturer || null,
     b.model || null,
@@ -75,6 +79,7 @@ router.post('/', requireLogin, (req, res) => {
     b.vpn || null,
     b.anydesk || null,
     b.mac || null,
+    b.ip_address || null,
     b.info || null,
     b.location_id || null,
     b.department || null,
@@ -92,7 +97,7 @@ router.post('/', requireLogin, (req, res) => {
 });
 
 router.get('/:id', requireLogin, (req, res) => {
-  const device = db.prepare(`SELECT d.*, c.name AS category_name, l.name AS location_name
+  const device = db.prepare(`SELECT d.*, c.name AS category_name, c.slug AS category_slug, l.name AS location_name
     FROM devices d
     LEFT JOIN device_categories c ON c.id = d.category_id
     LEFT JOIN locations l ON l.id = d.location_id
@@ -101,8 +106,7 @@ router.get('/:id', requireLogin, (req, res) => {
   const history = db.prepare('SELECT h.*, u.full_name AS user_name FROM device_history h LEFT JOIN users u ON u.id = h.user_id WHERE device_id = ? ORDER BY h.created_at DESC').all(req.params.id);
   const assignments = db.prepare(`SELECT a.*, e.person, e.department FROM assignments a
     JOIN employees e ON e.id = a.employee_id WHERE a.device_id = ? ORDER BY a.created_at DESC`).all(req.params.id);
-  const employees = db.prepare('SELECT * FROM employees WHERE active = 1 ORDER BY person').all();
-  res.render('devices/view', { device, history, assignments, employees });
+  res.render('devices/view', { device, history, assignments });
 });
 
 router.get('/:id/edytuj', requireLogin, (req, res) => {
@@ -116,10 +120,10 @@ router.get('/:id/edytuj', requireLogin, (req, res) => {
 router.put('/:id', requireLogin, (req, res) => {
   const b = req.body;
   db.prepare(`UPDATE devices SET device=?, category_id=?, manufacturer=?, model=?, serial_number=?, inventory_number=?,
-    device_type=?, domena=?, computer_name=?, is_using_erp=?, vnc=?, vpn=?, anydesk=?, mac=?, info=?,
+    device_type=?, domena=?, computer_name=?, is_using_erp=?, vnc=?, vpn=?, anydesk=?, mac=?, ip_address=?, info=?,
     location_id=?, department=?, room=?, assigned_to_employee_id=?, assigned_to_location=?, purpose=?,
     data_zakupu=?, warranty_end_date=?, notes=? WHERE id=?`).run(
-    b.device,
+    b.device || b.model || b.computer_name || null,
     b.category_id || null,
     b.manufacturer || null,
     b.model || null,
@@ -133,6 +137,7 @@ router.put('/:id', requireLogin, (req, res) => {
     b.vpn || null,
     b.anydesk || null,
     b.mac || null,
+    b.ip_address || null,
     b.info || null,
     b.location_id || null,
     b.department || null,

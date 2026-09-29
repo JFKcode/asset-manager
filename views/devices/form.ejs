@@ -4,10 +4,6 @@
 <div class="card">
   <form method="POST" action="<%= action %>" class="form-grid">
     <div class="field">
-      <label>Nazwa / opis urządzenia</label>
-      <input type="text" name="device" value="<%= device.device || '' %>">
-    </div>
-    <div class="field">
       <label>Kategoria</label>
       <select name="category_id" id="category_id" required>
         <option value="">Wybierz kategorię</option>
@@ -16,6 +12,10 @@
         <% }) %>
       </select>
     </div>
+    <div class="field device-name-field">
+      <label>Nazwa / opis urządzenia</label>
+      <input type="text" name="device" value="<%= device.device || '' %>">
+    </div>
     <div class="field">
       <label>Producent</label>
       <input type="text" name="manufacturer" value="<%= device.manufacturer || '' %>">
@@ -23,10 +23,6 @@
     <div class="field monitor-field">
       <label>Model</label>
       <input type="text" name="model" value="<%= device.model || '' %>">
-    </div>
-    <div class="field">
-      <label>Typ urządzenia</label>
-      <input type="text" name="device_type" placeholder="Laptop, Monitor, Telefon..." value="<%= device.device_type || '' %>">
     </div>
     <div class="field">
       <label>Numer inwentarzowy</label>
@@ -53,35 +49,36 @@
         <% }) %>
       </select>
     </div>
+    <div class="field printer-field">
+      <label>Adres IP</label>
+      <input type="text" name="ip_address" placeholder="192.168.1.100" value="<%= device.ip_address || '' %>">
+    </div>
     <div class="field laptop-field">
-      <label>Dział / departament</label>
-      <input type="text" name="department" value="<%= device.department || '' %>">
+      <label for="department">Dział / departament</label>
+      <select name="department" id="department">
+        <option value="">Wybierz dział</option>
+        <% ['Hoste', 'Purchase', 'Marketing', 'HR', 'Mechanic', 'electric', 'Packing', 'Accounting', 'Admin', 'Production', 'Planning', 'BHP', 'QC', 'Węgry', 'IT', 'Club', 'Office', 'Security', 'Logistic'].forEach(departmentName => { %>
+          <option value="<%= departmentName %>" <%= device.department === departmentName ? 'selected' : '' %>><%= departmentName %></option>
+        <% }) %>
+      </select>
     </div>
     <div class="field laptop-field">
       <label>Pomieszczenie / sala</label>
       <input type="text" name="room" value="<%= device.room || '' %>">
     </div>
-    <div class="field laptop-field">
-      <label>Przeznaczenie / używane do</label>
-      <input type="text" name="purpose" value="<%= device.purpose || '' %>">
-    </div>
-    <div class="field laptop-field">
-      <label>Przypisanie do lokalizacji</label>
-      <input type="text" name="assigned_to_location" value="<%= device.assigned_to_location || '' %>">
-    </div>
-    <div class="field laptop-field">
+    <div class="field laptop-field laptop-hidden-field">
       <label>MAC</label>
       <input type="text" name="mac" value="<%= device.mac || '' %>">
     </div>
-    <div class="field">
+    <div class="field simple-device-hidden-field">
       <label>VPN</label>
       <input type="text" name="vpn" value="<%= device.vpn || '' %>">
     </div>
-    <div class="field">
+    <div class="field simple-device-hidden-field">
       <label>VNC</label>
       <input type="text" name="vnc" value="<%= device.vnc || '' %>">
     </div>
-    <div class="field">
+    <div class="field simple-device-hidden-field">
       <label>AnyDesk</label>
       <input type="text" name="anydesk" value="<%= device.anydesk || '' %>">
     </div>
@@ -89,13 +86,9 @@
       <label>Data zakupu</label>
       <input type="date" name="data_zakupu" value="<%= device.data_zakupu || '' %>">
     </div>
-    <div class="field">
+    <div class="field simple-device-hidden-field laptop-hidden-field">
       <label>Data końca gwarancji</label>
       <input type="date" name="warranty_end_date" value="<%= device.warranty_end_date || '' %>">
-    </div>
-    <div class="field full checkbox-row">
-      <input type="checkbox" id="erp" name="is_using_erp" value="1" <%= device.is_using_erp ? 'checked' : '' %>>
-      <label for="erp" style="margin:0">Korzysta z ERP</label>
     </div>
     <div class="field full">
       <label>Uwagi / opis</label>
@@ -117,11 +110,22 @@
   const categorySelect = document.getElementById('category_id');
   const serialLabel = document.getElementById('serial-label');
   const laptopFields = document.querySelectorAll('.laptop-field');
+  const laptopHiddenFields = document.querySelectorAll('.laptop-hidden-field');
+  const deviceNameField = document.querySelector('.device-name-field');
+  const simpleDeviceHiddenFields = document.querySelectorAll('.simple-device-hidden-field');
+  const printerFields = document.querySelectorAll('.printer-field');
 
   function updateCategoryFields() {
     const slug = categorySelect.options[categorySelect.selectedIndex]?.dataset.slug;
     const isMonitor = slug === 'monitor';
-    laptopFields.forEach(field => { field.hidden = isMonitor; });
+    const isSimpleDevice = ['monitor', 'router', 'serwer', 'switch', 'drukarka'].includes(slug);
+    const isPrinter = slug === 'drukarka';
+    const isLaptop = slug === 'laptop';
+    laptopFields.forEach(field => { field.hidden = isSimpleDevice; });
+    laptopHiddenFields.forEach(field => { field.hidden = isLaptop; });
+    deviceNameField.hidden = isLaptop;
+    simpleDeviceHiddenFields.forEach(field => { field.hidden = isSimpleDevice; });
+    printerFields.forEach(field => { field.hidden = !isPrinter; });
     serialLabel.textContent = isMonitor ? 'ServiceTag' : 'Serial NR / Service Tag';
   }
 

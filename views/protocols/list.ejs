@@ -13,18 +13,15 @@
     <tbody>
       <% if (protocols.length === 0) { %><tr><td colspan="7" class="empty-state">Brak protokołów.</td></tr><% } %>
       <% protocols.forEach(p => { %>
-        <tr>
+        <tr class="clickable-row" data-href="/protokoly/<%= p.id %>/pdf" tabindex="0" role="link">
           <td class="muted"><%= p.signed_at %></td>
           <td><span class="badge badge-<%= p.type === 'wydanie' ? 'wydany' : 'dostepny' %>"><%= p.type %></span></td>
           <td><%= p.person %></td>
           <td><%= p.device || '-' %> <span class="muted">(<%= p.serial_number || '-' %>)</span></td>
           <td class="muted"><%= p.emailed_to || '-' %></td>
           <td><span class="badge badge-<%= p.email_status || 'not_sent' %>"><%= p.email_status || 'not_sent' %></span></td>
-          <td style="display:flex; gap:6px;">
+          <td class="protocol-actions">
             <a href="/protokoly/<%= p.id %>/pdf" target="_blank" class="btn btn-sm btn-secondary">PDF</a>
-            <form method="POST" action="/protokoly/<%= p.id %>/wyslij-ponownie">
-              <button class="btn btn-sm btn-secondary" type="submit">Wyślij ponownie</button>
-            </form>
           </td>
         </tr>
       <% }) %>
@@ -32,3 +29,17 @@
   </table>
 </div>
 <%- include('../partials/footer') %>
+
+<script>
+  document.querySelectorAll('.clickable-row').forEach(row => {
+    row.addEventListener('click', event => {
+      if (event.target.closest('a, button, input, select, textarea')) return;
+      window.open(row.dataset.href, '_blank');
+    });
+    row.addEventListener('keydown', event => {
+      if (event.key !== 'Enter' && event.key !== ' ') return;
+      event.preventDefault();
+      window.open(row.dataset.href, '_blank');
+    });
+  });
+</script>

@@ -12,7 +12,7 @@
         <select name="assignment_id" required>
           <option value="">-- wybierz --</option>
           <% assignments.forEach(a => { %>
-            <option value="<%= a.id %>">
+            <option value="<%= a.id %>" <%= String(selectedAssignmentId) === String(a.id) ? 'selected' : '' %>>
               <%= a.person %> (<%= a.department || '-' %>) — <%= a.device || 'urządzenie' %> / <%= a.serial_number || 'brak S/N' %> — wydano: <%= a.data_wydania %>
             </option>
           <% }) %>

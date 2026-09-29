@@ -30,17 +30,17 @@
     <% }) %>
   </select>
 
-  <input type="text" name="department" placeholder="Dział" value="<%= department %>">
+  <select name="department">
+    <option value="">Wszystkie działy</option>
+    <% ['Hoste', 'Purchase', 'Marketing', 'HR', 'Mechanic', 'electric', 'Packing', 'Accounting', 'Admin', 'Production', 'Planning', 'BHP', 'QC', 'Węgry', 'IT', 'Club', 'Office', 'Security', 'Logistic'].forEach(departmentName => { %>
+      <option value="<%= departmentName %>" <%= department === departmentName ? 'selected' : '' %>><%= departmentName %></option>
+    <% }) %>
+  </select>
   <select name="employee_id">
     <option value="">Wszyscy pracownicy</option>
     <% employees.forEach(employee => { %>
       <option value="<%= employee.id %>" <%= employee_id == employee.id ? 'selected' : '' %>><%= employee.person %></option>
     <% }) %>
-  </select>
-  <select name="active">
-    <option value="1" <%= active === '1' ? 'selected' : '' %>>Tylko aktywne</option>
-    <option value="0" <%= active === '0' ? 'selected' : '' %>>Tylko nieaktywne</option>
-    <option value="all" <%= active === 'all' ? 'selected' : '' %>>Aktywne i nieaktywne</option>
   </select>
   <button class="btn btn-secondary" type="submit">Filtruj</button>
 </form>
@@ -51,10 +51,10 @@
       <tr>
         <th>Urządzenie</th>
         <th>Kategoria</th>
-        <th>Typ</th>
         <th>S/N</th>
         <th>Lokalizacja</th>
         <th>Dział</th>
+        <th>Pracownik</th>
         <th>Status</th>
         <th></th>
       </tr>
@@ -64,21 +64,39 @@
         <tr><td colspan="8" class="empty-state">Brak urządzeń spełniających kryteria.</td></tr>
       <% } %>
       <% devices.forEach(d => { %>
-        <tr>
-          <td><a href="/urzadzenia/<%= d.id %>"><%= d.device || '(bez nazwy)' %></a></td>
+        <tr class="clickable-row" data-href="/urzadzenia/<%= d.id %>" tabindex="0" role="link">
+          <td><a href="/urzadzenia/<%= d.id %>"><%= d.device || d.model || '(bez nazwy)' %></a></td>
           <td><%= d.category_name || '-' %></td>
-          <td><%= d.device_type || '-' %></td>
           <td><%= d.serial_number || '-' %></td>
           <td><%= d.location_name || d.assigned_to_location || '-' %></td>
           <td><%= d.department || '-' %></td>
+          <td><%= d.assigned_employee_name || '-' %></td>
           <td>
             <span class="badge badge-<%= d.status %>"><%= d.status %></span>
             <% if (!d.active) { %><span class="badge badge-inactive">Nieaktywne</span><% } %>
           </td>
-          <td><a href="/urzadzenia/<%= d.id %>/edytuj" class="btn btn-sm btn-secondary">Edytuj</a></td>
+            <td class="device-actions">
+            <% if (d.status === 'wydany' && d.assignment_id) { %>
+              <a href="/protokoly/zdanie/nowy?assignment_id=<%= d.assignment_id %>" class="btn btn-sm btn-danger">Zdaj</a>
+            <% } %>
+          </td>
         </tr>
       <% }) %>
     </tbody>
   </table>
 </div>
 <%- include('../partials/footer') %>
+
+<script>
+  document.querySelectorAll('.clickable-row').forEach(row => {
+    row.addEventListener('click', event => {
+      if (event.target.closest('a, button, input, select, textarea')) return;
+      window.location.href = row.dataset.href;
+    });
+    row.addEventListener('keydown', event => {
+      if (event.key !== 'Enter' && event.key !== ' ') return;
+      event.preventDefault();
+      window.location.href = row.dataset.href;
+    });
+  });
+</script>

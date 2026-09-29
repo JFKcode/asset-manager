@@ -7,7 +7,6 @@
 <div class="card">
   <div class="detail-grid">
     <div class="item"><div class="k">Dział</div><div class="v"><%= employee.department || '-' %></div></div>
-    <div class="item"><div class="k">Linia</div><div class="v"><%= employee.line || '-' %></div></div>
     <div class="item"><div class="k">E-mail</div><div class="v"><%= employee.email || '-' %></div></div>
   </div>
   <% if (employee.info) { %><p class="muted" style="margin-top:14px;"><%= employee.info %></p><% } %>
@@ -16,19 +15,42 @@
 <div class="section-title">Przypisany / historyczny sprzęt</div>
 <div class="table-wrap">
   <table>
-    <thead><tr><th>Urządzenie</th><th>S/N</th><th>Data wydania</th><th>Data zdania</th><th>Status</th></tr></thead>
+    <thead><tr><th>Urządzenie</th><th>S/N</th><th>Data wydania</th><th>Data zdania</th><th>Status</th><th></th></tr></thead>
     <tbody>
-      <% if (assignments.length === 0) { %><tr><td colspan="5" class="empty-state">Brak historii.</td></tr><% } %>
+      <% if (assignments.length === 0) { %><tr><td colspan="6" class="empty-state">Brak historii.</td></tr><% } %>
       <% assignments.forEach(a => { %>
-        <tr>
-          <td><a href="/urzadzenia/<%= a.device_id %>"><%= a.device || '-' %></a></td>
+        <tr class="clickable-row" data-href="/urzadzenia/<%= a.device_id %>" tabindex="0" role="link">
+          <td><a href="/urzadzenia/<%= a.device_id %>"><%= a.model || a.device || '-' %></a></td>
           <td><%= a.serial_number || '-' %></td>
           <td><%= a.data_wydania || '-' %></td>
           <td><%= a.data_zdania || '-' %></td>
-          <td><span class="badge badge-<%= a.status %>"><%= a.status %></span></td>
+          <td>
+            <span class="badge badge-<%= a.status === 'aktywne' ? 'wydany' : 'zakonczone' %>">
+              <%= a.status === 'aktywne' ? 'Wydany' : 'Zdany' %>
+            </span>
+          </td>
+          <td>
+            <% if (a.status === 'aktywne') { %>
+              <a href="/protokoly/zdanie/nowy?assignment_id=<%= a.id %>" class="btn btn-sm btn-danger">Zdaj</a>
+            <% } %>
+          </td>
         </tr>
       <% }) %>
     </tbody>
   </table>
 </div>
 <%- include('../partials/footer') %>
+
+<script>
+  document.querySelectorAll('.clickable-row').forEach(row => {
+    row.addEventListener('click', event => {
+      if (event.target.closest('a, button, input, select, textarea')) return;
+      window.location.href = row.dataset.href;
+    });
+    row.addEventListener('keydown', event => {
+      if (event.key !== 'Enter' && event.key !== ' ') return;
+      event.preventDefault();
+      window.location.href = row.dataset.href;
+    });
+  });
+</script>

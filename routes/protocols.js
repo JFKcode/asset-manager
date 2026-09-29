@@ -60,7 +60,8 @@ router.post('/wydanie', requireLogin, async (req, res) => {
 
   db.prepare('UPDATE protocols SET pdf_path = ? WHERE id = ?').run(pdfPath, protocolId);
   db.prepare('UPDATE assignments SET issue_protocol_id = ? WHERE id = ?').run(protocolId, assignmentId);
-  db.prepare("UPDATE devices SET status = 'wydany' WHERE id = ?").run(device_id);
+  db.prepare("UPDATE devices SET status = 'wydany', assigned_to_employee_id = ? WHERE id = ?")
+    .run(employee_id, device_id);
   db.prepare('INSERT INTO device_history (device_id, event, details, user_id) VALUES (?,?,?,?)')
     .run(device_id, 'wydano', `Wydano dla: ${employee.person}`, req.session.user.id);
 
@@ -97,7 +98,11 @@ router.get('/zdanie/nowy', requireLogin, (req, res) => {
     WHERE a.status = 'aktywne'
     ORDER BY a.data_wydania DESC
   `).all();
-  res.render('protocol/return', { assignments, companyName: process.env.COMPANY_NAME || 'Firma' });
+  res.render('protocol/return', {
+    assignments,
+    selectedAssignmentId: req.query.assignment_id || '',
+    companyName: process.env.COMPANY_NAME || 'Firma'
+  });
 });
 
 router.post('/zdanie', requireLogin, async (req, res) => {

@@ -79,12 +79,21 @@ a:hover { text-decoration: underline; }
 .btn-secondary:hover { background: #f0f1f3; }
 .btn-danger { background: var(--danger); }
 .btn-danger:hover { background: #8f3623; }
+.btn-disposal { background: #1b1b1b; }
+.btn-disposal:hover { background: #000; }
 .btn-sm { padding: 5px 10px; font-size: .82rem; }
 .btn-block { display: block; width: 100%; text-align: center; }
+.device-page-actions { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.device-page-actions > a,
+.device-page-actions > form { flex: 0 0 110px; width: 110px; margin: 0; }
+.device-page-actions .btn { width: 100%; min-width: 0; height: 36px; padding: 8px 10px; text-align: center; }
 
 /* Forms */
 .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
 .form-grid .full { grid-column: 1 / -1; }
+.simple-device-hidden-field[hidden] { display: none !important; }
+.laptop-hidden-field[hidden] { display: none !important; }
+.printer-field[hidden] { display: none !important; }
 label { display: block; font-size: .82rem; color: var(--ink-soft); margin-bottom: 4px; font-weight: 600; }
 input[type=text], input[type=email], input[type=password], input[type=date], select, textarea {
   width: 100%; padding: 9px 10px; border: 1px solid var(--border); border-radius: 6px;
@@ -101,6 +110,11 @@ table { width: 100%; border-collapse: collapse; background: var(--surface); bord
 th, td { padding: 10px 12px; text-align: left; border-bottom: 1px solid var(--border); font-size: .88rem; }
 th { background: #eef1ee; color: var(--ink-soft); font-weight: 600; font-size: .78rem; text-transform: uppercase; letter-spacing: .03em; }
 tr:hover td { background: #fafbfa; }
+.clickable-row { cursor: pointer; }
+.device-actions { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.device-actions .btn { min-width: 72px; text-align: center; }
+.protocol-actions { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
+.assignment-summary { margin-top: 16px; border-top: 1px solid var(--border); padding-top: 14px; }
 .table-wrap { overflow-x: auto; border: 1px solid var(--border); border-radius: var(--radius); }
 .table-wrap table { border: none; border-radius: 0; }
 

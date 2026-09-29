@@ -87,6 +87,7 @@ CREATE TABLE IF NOT EXISTS devices (
   vpn TEXT,
   anydesk TEXT,
   mac TEXT,
+  ip_address TEXT,
   info TEXT,
   location_id INTEGER REFERENCES locations(id),
   department TEXT,
@@ -113,6 +114,7 @@ ensureColumns('devices', [
   ['department', 'TEXT'],
   ['room', 'TEXT'],
   ['assigned_to_employee_id', 'INTEGER'],
+  ['ip_address', 'TEXT'],
   ['assigned_to_location', 'TEXT'],
   ['purpose', 'TEXT'],
   ['warranty_end_date', 'TEXT'],
@@ -180,15 +182,40 @@ if (categoryCount === 0) {
 const locationCount = db.prepare('SELECT COUNT(*) AS c FROM locations').get().c;
 if (locationCount === 0) {
   const defaultLocations = [
-    ['Magazyn', 'warehouse'],
-    ['Recepcja', 'reception'],
-    ['Serwerownia', 'server-room'],
-    ['Biuro główne', 'main-office']
+    ['L14', 'office'],
+    ['L17', 'office'],
+    ['Office', 'office'],
+    ['Club', 'office'],
+    ['MLP', 'office'],
+    ['Zdalne', 'remote'],
+    ['MagB', 'warehouse'],
+    ['Stock', 'warehouse']
   ];
 
   const insertLocation = db.prepare('INSERT INTO locations (name, type) VALUES (?, ?)');
   defaultLocations.forEach(([name, type]) => insertLocation.run(name, type));
 }
+
+const requiredLocations = [
+  ['L14', 'office'],
+  ['L17', 'office'],
+  ['Office', 'office'],
+  ['Club', 'office'],
+  ['MLP', 'office'],
+  ['Zdalne', 'remote'],
+  ['MagB', 'warehouse'],
+  ['Stock', 'warehouse']
+];
+const requiredLocationNames = requiredLocations.map(([name]) => name);
+db.prepare(`UPDATE locations SET active = 0 WHERE name NOT IN (${requiredLocationNames.map(() => '?').join(',')})`)
+  .run(...requiredLocationNames);
+const findLocation = db.prepare('SELECT id FROM locations WHERE name = ?');
+const insertLocation = db.prepare('INSERT INTO locations (name, type) VALUES (?, ?)');
+const activateLocation = db.prepare('UPDATE locations SET active = 1, type = ? WHERE name = ?');
+requiredLocations.forEach(([name, type]) => {
+  if (findLocation.get(name)) activateLocation.run(type, name);
+  else insertLocation.run(name, type);
+});
 
 // Seed domyslnego admina, jesli baza jest pusta
 const userCount = db.prepare('SELECT COUNT(*) AS c FROM users').get().c;

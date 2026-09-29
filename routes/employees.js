@@ -9,7 +9,7 @@ router.get('/', requireLogin, (req, res) => {
   let sql = 'SELECT * FROM employees WHERE active = 1';
   const params = [];
   if (q) {
-    sql += ' AND (person LIKE ? OR department LIKE ? OR line LIKE ?)';
+    sql += ' AND (LOWER(person) LIKE LOWER(?) OR LOWER(department) LIKE LOWER(?) OR LOWER(line) LIKE LOWER(?))';
     const like = `%${q}%`;
     params.push(like, like, like);
   }
@@ -45,7 +45,7 @@ router.put('/:id', requireLogin, (req, res) => {
 router.get('/:id', requireLogin, (req, res) => {
   const employee = db.prepare('SELECT * FROM employees WHERE id = ?').get(req.params.id);
   if (!employee) return res.status(404).render('error', { message: 'Nie znaleziono pracownika.' });
-  const assignments = db.prepare(`SELECT a.*, d.device, d.serial_number FROM assignments a
+  const assignments = db.prepare(`SELECT a.*, d.device, d.model, d.serial_number, d.status AS device_status FROM assignments a
     JOIN devices d ON d.id = a.device_id WHERE a.employee_id = ? ORDER BY a.created_at DESC`).all(req.params.id);
   res.render('employees/view', { employee, assignments });
 });
